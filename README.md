@@ -1,4 +1,4 @@
-### RFM Analysis_SQL/ Power BI
+# Customer Behavior Analysis by RFM Analysis_SQL/ Power BI
 
 # 📑 Table of Contents
 
