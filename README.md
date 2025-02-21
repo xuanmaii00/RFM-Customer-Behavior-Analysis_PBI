@@ -65,7 +65,6 @@ The **Fact_Sales** table contains detailed sales transactions, storing key metri
 | `rowguid`             | uniqueidentifier     | Unique identifier for each record (used for replication).  |
 | `ModifiedDate`        | datetime             | Last modification timestamp.  |
 
----
 
 ### **2️⃣ Dimension Tables**  
 
@@ -82,7 +81,6 @@ Stores customer details, allowing segmentation and personalization of marketing 
 | `rowguid`         | uniqueidentifier | Unique identifier for replication.  |
 | `ModifiedDate`    | datetime     | Last modification timestamp.  |
 
----
 
 #### **Dim_ProductCategory (Production.ProductCategory)**  
 Provides a high-level classification of products.  
@@ -94,7 +92,6 @@ Provides a high-level classification of products.
 | `rowguid`           | uniqueidentifier  | Unique identifier for replication.  |
 | `ModifiedDate`      | datetime         | Last modification timestamp.  |
 
----
 
 #### **Dim_ProductSubcategory (Production.ProductSubcategory)**  
 Represents a more granular classification of products under each category.  
@@ -107,7 +104,6 @@ Represents a more granular classification of products under each category.
 | `rowguid`           | uniqueidentifier  | Unique identifier for replication.  |
 | `ModifiedDate`      | datetime         | Last modification timestamp.  |
 
----
 
 #### **Dim_Location (Production.Location)**  
 Represents the geographical locations relevant to sales and operations.  
@@ -120,7 +116,6 @@ Represents the geographical locations relevant to sales and operations.
 | `Availability`  | decimal(8,2)   | Work capacity (in hours).  |
 | `ModifiedDate`  | datetime       | Last modification timestamp.  |
 
----
 
 #### **Dim_Segment (Customer Segmentation based on RFM Scores)**  
 Customers are classified based on **Recency, Frequency, and Monetary (RFM) scores** into segments such as **Champions, Loyal Customers, At-Risk, and Lost Customers**.  
@@ -137,7 +132,6 @@ Customers are classified based on **Recency, Frequency, and Monetary (RFM) score
 | Can't Lose Them         | 155, 154, 144, etc.  | Previously high-value, now inactive customers.  |
 | Lost                    | 111, 112, 121, etc.  | Customers who made very few purchases a long time ago.  |
 
----
 
 #### **Dim_Date (Created using DAX)**  
 This dimension table enables time-based analysis, helping to track sales trends over different periods.  
@@ -157,7 +151,6 @@ This dimension table enables time-based analysis, helping to track sales trends 
 | `Week Number`   | int          | Week number of the year.  |
 | `Day of Year`   | int          | Day of the year (1-365).  |
 
----
 ## 📊 Measure Table – Key Performance Indicators  
 
 To support **customer segmentation and retention analysis**, I created a **Measure Table** in Power BI that calculates essential metrics based on the dataset.  
@@ -175,7 +168,6 @@ To support **customer segmentation and retention analysis**, I created a **Measu
 | **RFM Score** | `RANKX(ALL(Customer), [Recency] + [Frequency] + [Monetary], , DESC, Dense)` | Scores customers based on their **Recency, Frequency, and Monetary Value**. |
 | **High-Value Customers** | `IF([RFM Score] >= THRESHOLD, "High-Value", "Others")` | Categorizes customers based on their RFM score. | 
 
----
 
 ### **Data Relationships & Schema Design**  
 
@@ -201,8 +193,6 @@ To ensure the dashboard meets business needs, I analyzed stakeholder concerns us
 - Difficulty in **prioritizing customers**, making it hard to **personalize campaigns**.  
 - No **churn prevention strategy**, resulting in **lost revenue**.  
 
----
-
 #### 🔍 5W1H Analysis  
 
 | **Question** | **Insight** |
@@ -212,8 +202,6 @@ To ensure the dashboard meets business needs, I analyzed stakeholder concerns us
 | **When & Where is it used?** | - **Monthly meetings** for retention analysis. <br> - **Marketing campaign planning** to refine audience targeting. <br> - **Sales forecasting** to allocate budgets effectively. |
 | **Why is it needed?** | - **Improves marketing precision**. <br> - **Optimizes customer retention efforts**. <br> - **Supports data-driven sales strategies**. |
 | **How was the problem handled before?** | - **Relying on intuition** and **manual tracking**. <br> - **Running generic campaigns** with low engagement. |
-
----
 
 #### 📝 Empathy Map – Understanding Stakeholder Perspectives  
 
@@ -225,13 +213,11 @@ To ensure the dashboard meets business needs, I analyzed stakeholder concerns us
 | **Pain Points** | - **Marketing budget wasted** on low-value customers. <br> - No clear strategy to **reduce churn**. |
 | **Gains** | - **Higher CLV** through better segmentation. <br> - **Improved marketing ROI** with precise targeting. <br> - **Reduced churn & increased loyalty**. |
 
----
 ### 2️⃣ Define – Establishing Key Metrics & Growth Formula  
 
 #### 🎯 North Star Metric: Defining Success  
 To create a meaningful customer segmentation strategy, I define key success metrics that drive growth. My **North Star Metric (NSM)** is based on **RFM (Recency, Frequency, Monetary) scoring**, providing a structured way to classify customers and track business performance.
 
----
 
 #### 📌 Growth Formula  
 I define **customer segments** and evaluate their impact across **three dimensions**:
@@ -242,7 +228,6 @@ I define **customer segments** and evaluate their impact across **three dimensio
 | **RFM Score**  | Regional Customer Trends | **Geographic Region** | Customer behavior patterns by region | | | |
 | **RFM Score**  | Product Category Performance | **Product Segments** | Revenue share per product group | | | |
 
----
 
 #### 📊 When is Success Achieved?  
 Success is measured when I can effectively categorize and analyze customer behavior across different segments.  
@@ -253,13 +238,11 @@ Success is measured when I can effectively categorize and analyze customer behav
 | **Geographic Region** | Regional Revenue Trends | Understanding customer trends in different regions. | Helps optimize marketing campaigns by location. |
 | **Product Segments** | Product Performance Metrics | Revenue contribution by different product categories. | Supports inventory planning and product marketing. |
 
----
-
 #### 📈 Why Choose These Metrics?  
 - **Clear & Measurable**: RFM scoring is easy to understand and implement.  
 - **Predictive Power**: Helps anticipate future customer behavior.  
 - **Strategic Value**: Provides actionable insights for marketing, sales, and retention strategies.  
----
+
 
 ### 3️⃣ Ideate – Developing Actionable Insights  
 
@@ -271,23 +254,22 @@ Success is measured when I can effectively categorize and analyze customer behav
 | **Need Retention** | Revenue trend of this group over time | - Key products driving revenue from this group <br> - Revenue trends for top products | - Product count & basket value trends over time <br> - Share of product categories per region | Implement personalized retention campaigns and optimize product offerings. |
 | **Need Conversion** | Customer segments with high engagement but low purchase conversion | - Avg. time between visits & purchases <br> - Abandoned cart rates by segment | - Top reasons for cart abandonment (price sensitivity, lack of urgency) <br> - Impact of discount strategies on conversion | Optimize conversion funnel through pricing strategies, urgency triggers, and remarketing. |
 
----
-### ⚒️ **4️⃣ Prototype – Data Preparation & Visualization**  
+### 4️⃣ Prototype – Data Preparation & Visualization
 
-#### 1️⃣ Data Selection & Structuring  
+#### 1 Data Selection & Structuring  
 - Chose relevant tables and fields from the **data dictionary** based on business objectives.  
 
-#### 2️⃣ Data Cleaning & Transformation  
+#### 2 Data Cleaning & Transformation  
 - Handled missing values, duplicates, and inconsistencies.  
 - Standardized date formats, categorical variables, and numerical fields.  
 - Used **SQL for querying and filtering** data efficiently.  
 - Applied **Power Query** for data transformation and merging multiple sources.  
 
-#### 3️⃣ Data Modeling    
+#### 3 Data Modeling    
 - Created fact and dimension tables to optimize performance.
 -  Established Star Schema model.   
 
-#### 4️⃣ Developing Measures  
+#### 4 Developing Measures  
 - **Calculated RFM Scores:**  
   - **Recency (R):** Days since last purchase → `Recency = TODAY() - Last_Purchase_Date`  
   - **Frequency (F):** Total purchases → `Frequency = COUNT(DISTINCT Order_ID)`  
@@ -298,31 +280,23 @@ Success is measured when I can effectively categorize and analyze customer behav
     - Stored results in a **Dim table named `Dim_Customer`**, containing customer details and their RFM scores.  
 - Applied **DAX** to compute advanced metrics.such as Customer Lifetime Value (CLV), Average Basket Size, and Revenue per Segment.  
 
-#### 5️⃣ Data Exploration & Insights Extraction  
+#### 5 Data Exploration & Insights Extraction  
 - Used **SQL queries** to identify spending trends, customer behaviors, and purchase patterns.  
 - Analyzed customer retention, churn risks, and segment distribution.  
 
-#### 6️⃣ Choosing Appropriate Visualizations  
+#### 6 Choosing Appropriate Visualizations  
 - Selected **Treemaps, Scatter Plot, Line Charts, Pie Charts and Bar Graphs** for intuitive insights.    
 
-#### 7️⃣ Dashboard Design & Prototyping  
+#### 7 Dashboard Design & Prototyping  
 - Organized reports into logical **views (Customer Overview, Segmentation, Location Analysis, Product Analysis).** 
 - Applied **consistent color themes** for clear differentiation.  
 - Ensured **user-friendly navigation** for stakeholders.  
 ---
 
-###  **6️⃣ Test and Implementation**:
+###  6️⃣ Test and Implementation:
 - Gathered feedback on prototype dashboards.  
 - Refined metrics, filters, and visualization choices for better clarity.  
 - Validated accuracy by cross-checking against raw data.
-#### 1. Segmentation
-![image](https://github.com/user-attachments/assets/74f7db09-04d8-4a6c-bb7e-7f6b234d84ed)
-#### 2. Top Value Analysis
-![image](https://github.com/user-attachments/assets/ecd344e4-9fe1-410b-a8f8-ab62d4901641)
-#### 3. Need Retention Analysis
-![image](https://github.com/user-attachments/assets/5b340744-a816-48ab-9693-fddd28a19965)
-#### 4. Need Conversion Analysis
-![image](https://github.com/user-attachments/assets/be12063f-68c8-4f3f-b21b-7fcc7bc7ade9)  
 
 ---  
 ## 4. 📊 Key Insights & Visualizations  
@@ -335,6 +309,22 @@ I categorize customers into four main groups to optimize engagement and revenue:
 - **🚀 Need Conversion (Promising, Potential Loyalist, New Customer)**: New or developing customers with strong potential to become loyal.  
 - **⚠️ No Action (About to Sleep, Lost Customer)**: A large segment with minimal revenue contribution and very low CLV.  
 
+### 🔹 Visualization
+#### Segmentation
+![image](https://github.com/user-attachments/assets/74f7db09-04d8-4a6c-bb7e-7f6b234d84ed)
+#### Top Value Analysis
+![image](https://github.com/user-attachments/assets/ecd344e4-9fe1-410b-a8f8-ab62d4901641)
+#### Need Retention Analysis
+![image](https://github.com/user-attachments/assets/5b340744-a816-48ab-9693-fddd28a19965)
+#### Need Conversion Analysis
+![image](https://github.com/user-attachments/assets/be12063f-68c8-4f3f-b21b-7fcc7bc7ade9)  
+
+
+---
+
+## 🔎 5.Final Conclusion & Recommendations
+
+Based on our insights, we recommend the following:
 ### 🎯 Recommended Strategies  
 
 #### 🏆 **Top Value – Strengthen Loyalty & Engagement**  
@@ -354,12 +344,6 @@ I categorize customers into four main groups to optimize engagement and revenue:
 - **Onboarding Series**: Educate new customers with product tips and special deals.  
 - **Bundling Offers**: Sell product sets at a discount to increase order value.  
 - **Time-Limited Discounts**: Use urgency-based promotions to drive purchases.  
-
----
-
-## 🔎 5.Final Conclusion & Recommendations
-
-Based on our insights, we recommend the following:
 
 ### 📌 Key Takeaways
 
