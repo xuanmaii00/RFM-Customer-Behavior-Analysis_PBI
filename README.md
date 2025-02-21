@@ -291,7 +291,7 @@ Success is measured when I can effectively categorize and analyze customer behav
 - Organized reports into logical **views (Customer Overview, Segmentation, Location Analysis, Product Analysis).** 
 - Applied **consistent color themes** for clear differentiation.  
 - Ensured **user-friendly navigation** for stakeholders.  
----
+
 
 ###  6️⃣ Test and Implementation:
 - Gathered feedback on prototype dashboards.  
