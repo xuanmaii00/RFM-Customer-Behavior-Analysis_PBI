@@ -2,11 +2,11 @@
 
 # 📑 Table of Contents
 
-1. 📌 Background & Overview
-2. 📂 Dataset Description & Data Structure
-3. 🧠 Design Thinking Process
-4. 📊 Key Insights & Visualizations
-5. 🔎 Final Conclusion & Recommendations
+1. [📌 Background & Overview](#-background--overview)  
+2. [📂 Dataset Description & Data Structure](#-dataset-description--data-structure)  
+3. [🧠 Design Thinking Process](#-design-thinking-process)  
+4. [📊 Key Insights & Visualizations](#-key-insights--visualizations)  
+5. [🔎 Final Conclusion & Recommendations](#-final-conclusion--recommendations)  
 
 ---
 
@@ -158,118 +158,206 @@ This dimension table enables time-based analysis, helping to track sales trends 
 | `Day of Year`   | int          | Day of the year (1-365).  |
 
 ---
+## 📊 Measure Table – Key Performance Indicators  
+
+To support **customer segmentation and retention analysis**, I created a **Measure Table** in Power BI that calculates essential metrics based on the dataset.  
+
+| **Measure Name** | **Calculation Logic** | **Purpose** |
+|------------------|----------------------|-------------|
+| **Total Revenue** | `SUM(Sales[Revenue])` | Calculates the total revenue from all transactions. |
+| **Average Order Value (AOV)** | `DIVIDE([Total Revenue], [Total Order Count])` | Determines the average revenue per order. |
+| **Customer Lifetime Value (CLV)** | `SUMX(VALUES(Customer[CustomerID]), [Average Order Value] * [Average Frequency])` | Estimates the total value a customer brings over time. |
+| **Recency (Days)** | `DATEDIFF(MAX(Sales[TransactionDate]), TODAY(), DAY)` | Measures how recently a customer made a purchase. |
+| **Frequency** | `COUNT(Sales[OrderID])` | Counts the number of transactions per customer. |
+| **Monetary Value** | `SUM(Sales[Revenue])` | Sums the total revenue per customer. |
+| **Churn Rate** | `DIVIDE([Churned Customers], [Total Customers])` | Calculates the percentage of customers who stopped purchasing. |
+| **Customer Retention Rate** | `1 - [Churn Rate]` | Determines the percentage of returning customers. |
+| **RFM Score** | `RANKX(ALL(Customer), [Recency] + [Frequency] + [Monetary], , DESC, Dense)` | Scores customers based on their **Recency, Frequency, and Monetary Value**. |
+| **High-Value Customers** | `IF([RFM Score] >= THRESHOLD, "High-Value", "Others")` | Categorizes customers based on their RFM score. | 
+
+---
 
 ### **Data Relationships & Schema Design**  
+
 The **Fact_Sales** table is at the center of the star schema, connecting to multiple dimension tables via **foreign key relationships**
+
+![Image](https://github.com/user-attachments/assets/6a2412ee-33b1-4120-bbb5-baa564505af9)
+
 ---
 
 ## 🧠 Design Thinking Process  
 
 ### 1️⃣ Empathize – Understanding Stakeholders’ Needs  
 
-To build an effective customer segmentation dashboard, we first engaged with key stakeholders to understand their challenges and expectations. Using the **5W1H framework** and an **Empathy Map**, we captured insights that shape our approach to **RFM-based segmentation**.  
+To ensure the dashboard meets business needs, I analyzed stakeholder concerns using the **5W1H framework** and an **Empathy Map**.  
 
-#### 🎯 Primary Stakeholder:  
-**Sales & Marketing Managers** – The end users of the dashboard, responsible for designing targeted strategies to improve retention, revenue, and engagement.  
+#### 🎯 Key Stakeholders  
+- **Marketing Professionals & Strategists** – Use the dashboard to refine **campaign strategies** and **improve customer engagement**.  
+- **Business & Data Analysts** – Leverage insights to identify **customer trends**, **optimize segmentation**, and support **data-driven decisions**.  
+- **E-commerce & Retail Decision-Makers** – Utilize the dashboard to **enhance customer retention**, **allocate budgets efficiently**, and **boost sales performance**.  
 
-#### ⚠️ Key Challenge:  
-There is no structured approach to understanding customer behavior and value, making it difficult to personalize marketing efforts and allocate budgets effectively.  
+#### ⚠️ Challenges Faced  
+- Lack of **structured customer insights**, leading to **ineffective targeting** and **wasted marketing spend**.  
+- Difficulty in **prioritizing customers**, making it hard to **personalize campaigns**.  
+- No **churn prevention strategy**, resulting in **lost revenue**.  
 
 ---
 
-### 📌 5W1H Analysis  
+#### 🔍 5W1H Analysis  
 
 | **Question** | **Insight** |
 |-------------|------------|
-| **Who will use the dashboard?** | Sales & Marketing Managers looking to identify valuable customers and optimize retention & acquisition strategies. |
-| **What problem does it solve?** | Provides customer segmentation based on RFM (Recency, Frequency, Monetary) to prioritize high-value customers and re-engage at-risk ones. |
-| **When and where will it be used?** | - In monthly strategy meetings to assess customer behavior.<br>- During marketing campaign planning to define targeting strategies.<br>- In sales forecasting and budgeting to allocate resources efficiently. |
-| **Why is it needed?** | - Marketing struggles with broad, ineffective targeting.<br>- Sales lacks insights on which customers to nurture or recover.<br>- Customer retention is low due to untailored engagement. |
-| **How has the problem been handled before?** | - Marketing used generalized campaigns without personalized offers.<br>- Sales relied on manual customer tracking, leading to inefficiencies.<br>- Decisions were based on intuition rather than data, causing missed opportunities. |
+| **Who will use the dashboard?** | **Marketing professionals, business analysts, and e-commerce decision-makers** for **customer segmentation** and **campaign planning**. |
+| **What problem does it solve?** | Provides **structured segmentation** to identify **high-value and at-risk customers**. |
+| **When & Where is it used?** | - **Monthly meetings** for retention analysis. <br> - **Marketing campaign planning** to refine audience targeting. <br> - **Sales forecasting** to allocate budgets effectively. |
+| **Why is it needed?** | - **Improves marketing precision**. <br> - **Optimizes customer retention efforts**. <br> - **Supports data-driven sales strategies**. |
+| **How was the problem handled before?** | - **Relying on intuition** and **manual tracking**. <br> - **Running generic campaigns** with low engagement. |
 
 ---
 
-### 🗺️ Empathy Map – Understanding Stakeholder Perspectives  
+#### 📝 Empathy Map – Understanding Stakeholder Perspectives  
 
 | **Aspect** | **Insights from Stakeholders** |
 |-----------|--------------------------------|
-| **Thinking & Feeling** | "How do we identify customers with the highest potential?"<br>"Which groups need different engagement approaches?"<br>"How do we prevent customer churn?" |
-| **Seeing** | Fragmented customer transaction data without clear segmentation.<br>Generic marketing campaigns with low conversion rates. |
-| **Saying & Doing** | "We need more precise targeting for promotions."<br>"We should focus on retaining our most valuable customers."<br>"Churn prediction would help us act before losing customers." |
-| **Pain Points** | - Marketing budget is wasted on low-engagement customers.<br>- No clear understanding of which customers contribute most to revenue.<br>- Difficulty in crafting personalized retention strategies. |
-| **Gains** | - Improved customer lifetime value (CLV) through better segmentation.<br>- Increased marketing ROI with more precise targeting.<br>- Data-driven insights to reduce churn and improve loyalty. |
+| **Thinking & Feeling** | "How do we identify our **most valuable customers**?" <br> "How can we **prevent churn**?" |
+| **Seeing** | **Unclear customer segmentation**, **broad marketing efforts**, **low conversion rates**. |
+| **Saying & Doing** | "We need **data-driven targeting strategies**." <br> "We should **focus on retaining high-value customers**." |
+| **Pain Points** | - **Marketing budget wasted** on low-value customers. <br> - No clear strategy to **reduce churn**. |
+| **Gains** | - **Higher CLV** through better segmentation. <br> - **Improved marketing ROI** with precise targeting. <br> - **Reduced churn & increased loyalty**. |
+
+---
+### 2️⃣ Define – Establishing Key Metrics & Growth Formula  
+
+#### 🎯 North Star Metric: Defining Success  
+To create a meaningful customer segmentation strategy, I define key success metrics that drive growth. My **North Star Metric (NSM)** is based on **RFM (Recency, Frequency, Monetary) scoring**, providing a structured way to classify customers and track business performance.
 
 ---
 
-### 🔄 Stakeholder Journey – How Insights Drive Action  
+#### 📌 Growth Formula  
+I define **customer segments** and evaluate their impact across **three dimensions**:
 
-| **Step** | **Description** |
-|---------|---------------|
-| **Step 1** | Marketing & Sales teams recognize a need for data-driven customer segmentation. |
-| **Step 2** | They identify pain points: ineffective targeting, low retention, and unclear customer value. |
-| **Step 3** | The Data Analytics team proposes an RFM-based segmentation approach. |
-| **Step 4** | Collaboration ensures the dashboard provides actionable insights, such as high-value customer lists and churn risks. |
-| **Step 5** | The dashboard is tested and refined based on real business use cases. |
-| **Step 6** | Sales & Marketing teams integrate the insights into campaign planning and retention strategies. |
-
----
-### ⚒️ Main Process:
-
-1️⃣ **Data Cleaning & Preprocessing**:
-
-- Removed missing values, duplicates, and inconsistent data.
-- Converted date formats and standardized categorical variables.
-
-2️⃣ **Exploratory Data Analysis (EDA):**
-
-- Analyzed spending patterns across different customer groups.
-- Identified trends in purchase frequency and customer lifetime value (CLV).
-
-3️⃣ **Customer Segmentation Using RFM Analysis:**
-
-- Categorized customers into segments based on their Recency, Frequency, and Monetary values.
-- Applied clustering techniques to validate segment definitions.
-
-4️⃣ **Strategy Development:**
-
-- Proposed marketing and retention strategies for each customer segment.
+| **North Star Metric 1**  | **North Star Metric 2 (Optional)**  | **Dimension Group**  | **Group 1** | **Group 2** | **Group 3** | **Group 4** |
+|--------------------------|-------------------------------------|----------------------|-------------|-------------|-------------|-------------|
+| **RFM Score**  | Revenue Contribution by Segment | **Customer Segments** | Top Value | Need Retention | Need Conversion | No Action |
+| **RFM Score**  | Regional Customer Trends | **Geographic Region** | Customer behavior patterns by region | | | |
+| **RFM Score**  | Product Category Performance | **Product Segments** | Revenue share per product group | | | |
 
 ---
 
-## 📊 Key Insights & Visualizations
+#### 📊 When is Success Achieved?  
+Success is measured when I can effectively categorize and analyze customer behavior across different segments.  
 
-### 🔍 Dashboard Preview
-
-1️⃣ **Customer Distribution by Segment**  
-✔️ Visualized how customers are distributed across different RFM segments.  
-✔️ Identified which segments contribute the most to revenue.  
-
-2️⃣ **Customer Spending Behavior Over Time**  
-✔️ Highlighted spending trends and seasonal fluctuations.  
-✔️ Showed peak sales periods and customer purchase frequency.  
-
-3️⃣ **Retention & Churn Analysis**  
-✔️ Identified customers at risk of churn and their characteristics.  
-✔️ Provided insights on how to re-engage lost customers.  
-
-### 📌 Analysis 1: Customer Segments
-
-- **Observation**: The majority of revenue comes from ‘Champions’ and ‘Loyal’ customers.
-- **Recommendation**: Implement tiered loyalty programs to retain these high-value customers.
-
-### 📌 Analysis 2: At-Risk Customers
-
-- **Observation**: A significant portion of revenue is lost due to customers shifting into the ‘At Risk’ segment.
-- **Recommendation**: Use re-engagement campaigns with personalized offers and exclusive discounts.
-
-### 📌 Analysis 3: New Customer Conversion
-
-- **Observation**: Many new customers make one-time purchases and don’t return.
-- **Recommendation**: Offer onboarding discounts, product bundles, and email sequences to drive repeat purchases.
+| **Dimension**         | **View**                                  | **Description**                                           | **Why?** |
+|----------------------|--------------------------------|-------------------------------------------------|--------|
+| **Customer Segments** | RFM-Based Customer Groups | Categorizing customers into **4 key segments**: Top Value, Need Retention, Need Conversion, No Action. | Enables targeted strategies for each segment. |
+| **Geographic Region** | Regional Revenue Trends | Understanding customer trends in different regions. | Helps optimize marketing campaigns by location. |
+| **Product Segments** | Product Performance Metrics | Revenue contribution by different product categories. | Supports inventory planning and product marketing. |
 
 ---
 
-## 🔎 Final Conclusion & Recommendations
+#### 📈 Why Choose These Metrics?  
+- **Clear & Measurable**: RFM scoring is easy to understand and implement.  
+- **Predictive Power**: Helps anticipate future customer behavior.  
+- **Strategic Value**: Provides actionable insights for marketing, sales, and retention strategies.  
+---
+
+### 3️⃣ Ideate – Developing Actionable Insights  
+
+### 📌 Dashboard Structure  
+| **Idea Name** | **Layer 0** – High-Level Metrics | **Layer 1** – Breakdown by One Dimension | **Layer 2** – Breakdown by Two Dimensions | **Key Actionable Insights** |
+|--------------|---------------------------------|---------------------------------|---------------------------------|---------------------------------|
+| **Segments Overview** | RFM-Based Segments, grouped into 4 major action groups | - Revenue contribution by segment  <br> - Yearly revenue trends per segment <br> - Customer count per segment | - Revenue share of each segment within a group | Identify the most valuable segments and tailor marketing strategies accordingly. |
+| **Top Value** | Avg. RFM Score of top customer groups | - Avg. cart size & order value per segment <br> - Avg. spending per product category | - Avg. basket value by country | Strengthen loyalty programs and exclusive offers for high-value customers. |
+| **Need Retention** | Revenue trend of this group over time | - Key products driving revenue from this group <br> - Revenue trends for top products | - Product count & basket value trends over time <br> - Share of product categories per region | Implement personalized retention campaigns and optimize product offerings. |
+| **Need Conversion** | Customer segments with high engagement but low purchase conversion | - Avg. time between visits & purchases <br> - Abandoned cart rates by segment | - Top reasons for cart abandonment (price sensitivity, lack of urgency) <br> - Impact of discount strategies on conversion | Optimize conversion funnel through pricing strategies, urgency triggers, and remarketing. |
+
+---
+### ⚒️ **4️⃣ Prototype – Data Preparation & Visualization**  
+
+#### 1️⃣ Data Selection & Structuring  
+- Chose relevant tables and fields from the **data dictionary** based on business objectives.  
+
+#### 2️⃣ Data Cleaning & Transformation  
+- Handled missing values, duplicates, and inconsistencies.  
+- Standardized date formats, categorical variables, and numerical fields.  
+- Used **SQL for querying and filtering** data efficiently.  
+- Applied **Power Query** for data transformation and merging multiple sources.  
+
+#### 3️⃣ Data Modeling    
+- Created fact and dimension tables to optimize performance.
+-  Established Star Schema model.   
+
+#### 4️⃣ Developing Measures  
+- **Calculated RFM Scores:**  
+  - **Recency (R):** Days since last purchase → `Recency = TODAY() - Last_Purchase_Date`  
+  - **Frequency (F):** Total purchases → `Frequency = COUNT(DISTINCT Order_ID)`  
+  - **Monetary (M):** Total spending → `Monetary = SUM(Total_Spent)`  
+  - **Scoring:**  
+    - Used **percentile-based ranking** to assign scores from 1 to 5 for Recency (low = better), Frequency, and Monetary (high = better).  
+    - Final RFM Score = `R_Score + F_Score + M_Score`.  
+    - Stored results in a **Dim table named `Dim_Customer`**, containing customer details and their RFM scores.  
+- Applied **DAX** to compute advanced metrics.such as Customer Lifetime Value (CLV), Average Basket Size, and Revenue per Segment.  
+
+#### 5️⃣ Data Exploration & Insights Extraction  
+- Used **SQL queries** to identify spending trends, customer behaviors, and purchase patterns.  
+- Analyzed customer retention, churn risks, and segment distribution.  
+
+#### 6️⃣ Choosing Appropriate Visualizations  
+- Selected **Treemaps, Scatter Plot, Line Charts, Pie Charts and Bar Graphs** for intuitive insights.    
+
+#### 7️⃣ Dashboard Design & Prototyping  
+- Organized reports into logical **views (Customer Overview, Segmentation, Location Analysis, Product Analysis).** 
+- Applied **consistent color themes** for clear differentiation.  
+- Ensured **user-friendly navigation** for stakeholders.  
+---
+
+###  **6️⃣ Test and Implementation**:
+- Gathered feedback on prototype dashboards.  
+- Refined metrics, filters, and visualization choices for better clarity.  
+- Validated accuracy by cross-checking against raw data.
+#### 1. Segmentation
+![image](https://github.com/user-attachments/assets/74f7db09-04d8-4a6c-bb7e-7f6b234d84ed)
+#### 2. Top Value Analysis
+![image](https://github.com/user-attachments/assets/ecd344e4-9fe1-410b-a8f8-ab62d4901641)
+#### 3. Need Retention Analysis
+![image](https://github.com/user-attachments/assets/5b340744-a816-48ab-9693-fddd28a19965)
+#### 4. Need Conversion Analysis
+![image](https://github.com/user-attachments/assets/be12063f-68c8-4f3f-b21b-7fcc7bc7ade9)  
+
+---  
+## 4. 📊 Key Insights & Visualizations  
+
+### 🔹 Customer Segmentation  
+I categorize customers into four main groups to optimize engagement and revenue:  
+
+- **🏆 Top Value (Champions, Loyal)**: High-CLV customers who drive most of the revenue and exhibit the best purchasing behavior.  
+- **🔄 Need Retention (Cannot Lose Them, At Risk, Need Attention, Hibernating)**: Contribute significantly to revenue but are showing signs of disengagement.  
+- **🚀 Need Conversion (Promising, Potential Loyalist, New Customer)**: New or developing customers with strong potential to become loyal.  
+- **⚠️ No Action (About to Sleep, Lost Customer)**: A large segment with minimal revenue contribution and very low CLV.  
+
+### 🎯 Recommended Strategies  
+
+#### 🏆 **Top Value – Strengthen Loyalty & Engagement**  
+- **Tiered Loyalty Programs**: Offer exclusive perks (VIP service, discounts, early access).  
+- **Personalized Rewards**: Provide tailored discounts or free products based on preferences.  
+- **Exclusive Events**: Organize product previews, webinars, or VIP experiences.  
+
+#### 🔄 **Need Retention – Re-Engage & Prevent Churn**  
+- **Reactivation Offers**: Send time-sensitive discounts or free gifts to inactive customers.  
+- **Customer Feedback Loop**: Collect insights to enhance offerings and address concerns.  
+- **Lapsed Customer Campaigns**: Automate email follow-ups with incentives.  
+- **Retargeting Ads**: Remind customers of previous interests or abandoned carts.  
+- **Exclusive Memberships**: Introduce subscription perks like discounts and early sales access.  
+
+#### 🚀 **Need Conversion – Encourage Repeat Purchases**  
+- **Follow-Up Offers**: Provide post-first-purchase discounts or free shipping.  
+- **Onboarding Series**: Educate new customers with product tips and special deals.  
+- **Bundling Offers**: Sell product sets at a discount to increase order value.  
+- **Time-Limited Discounts**: Use urgency-based promotions to drive purchases.  
+
+---
+
+## 🔎 5.Final Conclusion & Recommendations
 
 Based on our insights, we recommend the following:
 
@@ -287,37 +375,3 @@ Based on our insights, we recommend the following:
 - Develop a structured onboarding journey for new customers.
 - Continuously analyze customer behavior to refine strategies.
 
-This structured approach ensures data-driven decision-making and maximizes customer lifetime value. 🚀
-
-## II/ Visualization
-### 1. Segmentation
-![image](https://github.com/user-attachments/assets/74f7db09-04d8-4a6c-bb7e-7f6b234d84ed)
-### 2. Top Value Analysis
-![image](https://github.com/user-attachments/assets/ecd344e4-9fe1-410b-a8f8-ab62d4901641)
-### 3. Need Retention Analysis
-![image](https://github.com/user-attachments/assets/5b340744-a816-48ab-9693-fddd28a19965)
-### 4. Need Conversion Analysis
-![image](https://github.com/user-attachments/assets/be12063f-68c8-4f3f-b21b-7fcc7bc7ade9)
-## III/ Insights and Recommendations
-We can gather the customer segments into 4 main groups to take action:  
-- **Top value**: Champions, Loyal -> contribute most of the revenue to the company, has supreme CLV and show the best buying behavior
-- **Need retention**: Cannot Loose Them, At Risk, Need Attention, Hibernating -> contribute quite considerably to the company revenue, has quite hight CLV and we are loosing them
-- **Need Conversion**: Promising, Potential Loyalist, New Customer -> new users that contribute quite noteworthy can be turned into Champions or Loyal
-- **No action**: About to sleep, Lost Customer -> consist of quite large number of customers but do not contribute much to the company revenue and has extremely low CLV
-
-From the above groups, I suggest the strategy for each group:
-- **Top value**: Implement exclusive loyalty programs or rewards to recognize and appreciate their continued support
-    + Tiered Loyalty Programs: Reward customers based on spending, with higher tiers unlocking exclusive perks like early product access, VIP service, or discounts.
-    + Personalized Rewards: Offer discounts or free items based on customers' favorite products.
-    + Exclusive Events: Host webinars, product previews, or in-person events to strengthen brand relationships
-- **Need retention**: Use personalized communication and offers to re-engage these customers.
-    + Reactivation Offers: Create offers that are sent exclusively to customers who have not made a purchase recently. These offers could include a significant discount or a free gift with their next purchase that align with their previous behavior.
-    + Customer Feedback Loop: Reach out to these customers to ask for feedback on their experience with the brand. Use their responses to improve products or services and communicate the changes made based on their input.
-    + Lapsed Customer Campaigns: Set up automated email campaigns that trigger when a customer hasn't interacted with the brand for a certain period.
-    + Retargeting Ads: Use social media platforms to retarget these customers with ads that feature products they’ve shown interest in or remind them of items left in their cart.
-    + Exclusive Memberships: Offer a subscription or membership program with perks such as regular discounts, early access to sales, or free shipping.
-- **Need Conversion**: Focus resources on this group, provide introductory offers or discounts to encourage second-time purchases and increase engagement, spending with the brand.
-    + Follow-Up Offers: Send a discount or bonus after the first purchase to encourage a second one. This could be a discount, free shipping, or a bonus item to encourage them to return quickly.
-    + Onboarding Series: Develop an onboarding email series that welcomes new customers and educates them about products or services. Include tips, product recommendations, and special offers to guide them towards their next purchase.
-    + Bundling Offers: Offer bundles of products at a discounted price to encourage these customers to try multiple items. This can exposes them to a wider range of the company offerings.
-    + Time-Limited Discounts: Provide time-limited discounts that create a sense of urgency for these customers to make their next purchase.
