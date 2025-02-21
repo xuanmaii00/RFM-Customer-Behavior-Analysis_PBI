@@ -324,7 +324,7 @@ I categorize customers into four main groups to optimize engagement and revenue:
 
 ## 🔎 5.Final Conclusion & Recommendations
 
-Based on our insights, we recommend the following:
+Based on our insights, I recommend the following:
 ### 🎯 Recommended Strategies  
 
 #### 🏆 **Top Value – Strengthen Loyalty & Engagement**  
