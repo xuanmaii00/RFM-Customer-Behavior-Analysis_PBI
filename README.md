@@ -58,7 +58,6 @@ The **Fact_Sales** table is at the center of the star schema, connecting to mult
 
 ### 1️⃣ Empathize – Understanding Stakeholders’ Needs  
 
-To ensure the dashboard meets business needs, I analyzed stakeholder concerns using the **5W1H framework** and an **Empathy Map**.  
 ##### 🔍 5W1H Analysis 
 ![Image](https://github.com/user-attachments/assets/ee0c09c3-0873-4c8c-b921-8d42706e8161)
 
@@ -70,21 +69,12 @@ To ensure the dashboard meets business needs, I analyzed stakeholder concerns us
 ### 2️⃣ Define – Establishing Key Metrics & Growth Formula  
 
 #### 🎯 North Star Metric: Defining Success  
-To create a meaningful customer segmentation strategy, I define key success metrics that drive growth. My **North Star Metric (NSM)** is based on **RFM (Recency, Frequency, Monetary) scoring**, providing a structured way to classify customers and track business performance.
+
 ![Image](https://github.com/user-attachments/assets/1f47d771-a844-4358-8c9c-4e3060c6a0ca)
 
 #### 📌 Define Point Of View  
+
 ![Image](https://github.com/user-attachments/assets/bc4497a6-19e8-4c1e-9db6-624a26ca71ca)
-
-
-#### 📊 When is Success Achieved?  
-Success is measured when I can effectively categorize and analyze customer behavior across different segments.  
-
-| **Dimension**         | **View**                                  | **Description**                                           | **Why?** |
-|----------------------|--------------------------------|-------------------------------------------------|--------|
-| **Customer Segments** | RFM-Based Customer Groups | Categorizing customers into **4 key segments**: Top Value, Need Retention, Need Conversion, No Action. | Enables targeted strategies for each segment. |
-| **Geographic Region** | Regional Revenue Trends | Understanding customer trends in different regions. | Helps optimize marketing campaigns by location. |
-| **Product Segments** | Product Performance Metrics | Revenue contribution by different product categories. | Supports inventory planning and product marketing. |
 
 #### 📈 Why Choose These Metrics?  
 - **Clear & Measurable**: RFM scoring is easy to understand and implement.  
@@ -94,59 +84,11 @@ Success is measured when I can effectively categorize and analyze customer behav
 
 ### 3️⃣ Ideate – Developing Actionable Insights  
 
-### 📌 Dashboard Structure  
-| **Idea Name** | **Layer 0** – High-Level Metrics | **Layer 1** – Breakdown by One Dimension | **Layer 2** – Breakdown by Two Dimensions | **Key Actionable Insights** |
-|--------------|---------------------------------|---------------------------------|---------------------------------|---------------------------------|
-| **Segments Overview** | RFM-Based Segments, grouped into 4 major action groups | - Revenue contribution by segment  <br> - Yearly revenue trends per segment <br> - Customer count per segment | - Revenue share of each segment within a group | Identify the most valuable segments and tailor marketing strategies accordingly. |
-| **Top Value** | Avg. RFM Score of top customer groups | - Avg. cart size & order value per segment <br> - Avg. spending per product category | - Avg. basket value by country | Strengthen loyalty programs and exclusive offers for high-value customers. |
-| **Need Retention** | Revenue trend of this group over time | - Key products driving revenue from this group <br> - Revenue trends for top products | - Product count & basket value trends over time <br> - Share of product categories per region | Implement personalized retention campaigns and optimize product offerings. |
-| **Need Conversion** | Customer segments with high engagement but low purchase conversion | - Avg. time between visits & purchases <br> - Abandoned cart rates by segment | - Top reasons for cart abandonment (price sensitivity, lack of urgency) <br> - Impact of discount strategies on conversion | Optimize conversion funnel through pricing strategies, urgency triggers, and remarketing. |
+![Image](https://github.com/user-attachments/assets/b47d3115-28ac-427d-8be5-5c76aab335d2)
 
-### 4️⃣ Prototype – Data Preparation & Visualization
-
-#### 1 Data Selection & Structuring  
-- Chose relevant tables and fields from the **data dictionary** based on business objectives.  
-
-#### 2 Data Cleaning & Transformation  
-- Handled missing values, duplicates, and inconsistencies.  
-- Standardized date formats, categorical variables, and numerical fields.  
-- Used **SQL for querying and filtering** data efficiently.  
-- Applied **Power Query** for data transformation and merging multiple sources.  
-
-#### 3 Data Modeling    
-- Created fact and dimension tables to optimize performance.
--  Established Star Schema model.   
-
-#### 4 Developing Measures  
-- **Calculated RFM Scores:**  
-  - **Recency (R):** Days since last purchase → `Recency = TODAY() - Last_Purchase_Date`  
-  - **Frequency (F):** Total purchases → `Frequency = COUNT(DISTINCT Order_ID)`  
-  - **Monetary (M):** Total spending → `Monetary = SUM(Total_Spent)`  
-  - **Scoring:**  
-    - Used **percentile-based ranking** to assign scores from 1 to 5 for Recency (low = better), Frequency, and Monetary (high = better).  
-    - Final RFM Score = `R_Score + F_Score + M_Score`.  
-    - Stored results in a **Dim table named `Dim_Customer`**, containing customer details and their RFM scores.  
-- Applied **DAX** to compute advanced metrics.such as Customer Lifetime Value (CLV), Average Basket Size, and Revenue per Segment.  
-
-#### 5 Data Exploration & Insights Extraction  
-- Used **SQL queries** to identify spending trends, customer behaviors, and purchase patterns.  
-- Analyzed customer retention, churn risks, and segment distribution.  
-
-#### 6 Choosing Appropriate Visualizations  
-- Selected **Treemaps, Scatter Plot, Line Charts, Pie Charts and Bar Graphs** for intuitive insights.    
-
-#### 7 Dashboard Design & Prototyping  
-- Organized reports into logical **views (Customer Overview, Segmentation, Location Analysis, Product Analysis).** 
-- Applied **consistent color themes** for clear differentiation.  
-- Ensured **user-friendly navigation** for stakeholders.  
-
-
-###  6️⃣ Test and Implementation:
-- Gathered feedback on prototype dashboards.  
-- Refined metrics, filters, and visualization choices for better clarity.  
-- Validated accuracy by cross-checking against raw data.
 
 ---  
+
 # 4. 📊 Key Insights & Visualizations  
 
 ## 🔹 Customer Segmentation  
@@ -372,7 +314,7 @@ I categorize customers into four main groups to optimize engagement and revenue:
 - Promote high-growth products like touring bikes.  
 - Explore strategies to improve repeat purchases.  
 
-
+---
 
 ## 🔎 5. Final Conclusion & Recommendations  
 
