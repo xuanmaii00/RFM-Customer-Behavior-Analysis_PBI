@@ -46,130 +46,7 @@ This project focuses on analyzing customer behaviors and segmenting them using R
 
 ## 📊 Data Structure & Relationships  
 
-To effectively analyze sales performance and customer behavior, the dataset was structured into a **star schema**, with **Sales.SalesOrderDetail** serving as the **Fact_Sales** table. This central fact table connects to multiple **dimension tables** to enhance data granularity and improve analytical capabilities. The key tables used in the analysis are:  
-
-### **1️⃣ Fact Table: Fact_Sales (Sales.SalesOrderDetail)**  
-The **Fact_Sales** table contains detailed sales transactions, storing key metrics such as unit price, discount, and order quantity.  
-
-| **Column Name**        | **Data Type**        | **Description**  |
-|------------------------|---------------------|------------------|
-| `SalesOrderID`          | int                 | Foreign key to SalesOrderHeader, identifying each sales order.  |
-| `SalesOrderDetailID`    | int                 | Unique identifier for each product sold within an order.  |
-| `CarrierTrackingNumber` | nvarchar(25)        | Shipment tracking number provided by the shipper.  |
-| `OrderQty`             | smallint             | Quantity ordered for each product.  |
-| `ProductID`           | int                  | Foreign key referencing the product being sold.  |
-| `SpecialOfferID`       | int                  | Promotional code applied to the sale.  |
-| `UnitPrice`           | money                | Selling price of a single product.  |
-| `UnitPriceDiscount`   | money                | Discount amount applied to the unit price.  |
-| `LineTotal`           | numeric(38,6)        | Total revenue per product sold, computed as: **UnitPrice × (1 - UnitPriceDiscount) × OrderQty**.  |
-| `rowguid`             | uniqueidentifier     | Unique identifier for each record (used for replication).  |
-| `ModifiedDate`        | datetime             | Last modification timestamp.  |
-
-
-### **2️⃣ Dimension Tables**  
-
-#### **Dim_Customer (Sales.Customer)**  
-Stores customer details, allowing segmentation and personalization of marketing strategies.  
-
-| **Column Name**   | **Data Type**  | **Description**  |
-|-------------------|--------------|------------------|
-| `CustomerID`       | int          | Primary key, uniquely identifying each customer.  |
-| `PersonID`        | int          | Foreign key to Person.BusinessEntityID.  |
-| `StoreID`         | int          | Foreign key to Store.BusinessEntityID.  |
-| `TerritoryID`     | int          | Identifies the customer's territory (links to SalesTerritory).  |
-| `AccountNumber`   | varchar(10)  | Unique identifier assigned by the accounting system.  |
-| `rowguid`         | uniqueidentifier | Unique identifier for replication.  |
-| `ModifiedDate`    | datetime     | Last modification timestamp.  |
-
-
-#### **Dim_ProductCategory (Production.ProductCategory)**  
-Provides a high-level classification of products.  
-
-| **Column Name**      | **Data Type**     | **Description**  |
-|----------------------|------------------|------------------|
-| `ProductCategoryID`   | int              | Primary key identifying product category.  |
-| `Name`               | nvarchar(50)     | Descriptive name of the category.  |
-| `rowguid`           | uniqueidentifier  | Unique identifier for replication.  |
-| `ModifiedDate`      | datetime         | Last modification timestamp.  |
-
-
-#### **Dim_ProductSubcategory (Production.ProductSubcategory)**  
-Represents a more granular classification of products under each category.  
-
-| **Column Name**      | **Data Type**     | **Description**  |
-|----------------------|------------------|------------------|
-| `ProductSubcategoryID` | int              | Primary key identifying subcategory.  |
-| `ProductCategoryID`   | int              | Foreign key linking to ProductCategory.  |
-| `Name`               | nvarchar(50)     | Descriptive name of the subcategory.  |
-| `rowguid`           | uniqueidentifier  | Unique identifier for replication.  |
-| `ModifiedDate`      | datetime         | Last modification timestamp.  |
-
-
-#### **Dim_Location (Production.Location)**  
-Represents the geographical locations relevant to sales and operations.  
-
-| **Column Name**  | **Data Type**   | **Description**  |
-|-----------------|---------------|------------------|
-| `LocationID`     | smallint       | Primary key identifying each location.  |
-| `Name`          | nvarchar(50)   | Location name/description.  |
-| `CostRate`      | smallmoney     | Standard hourly cost of the location.  |
-| `Availability`  | decimal(8,2)   | Work capacity (in hours).  |
-| `ModifiedDate`  | datetime       | Last modification timestamp.  |
-
-
-#### **Dim_Segment (Customer Segmentation based on RFM Scores)**  
-Customers are classified based on **Recency, Frequency, and Monetary (RFM) scores** into segments such as **Champions, Loyal Customers, At-Risk, and Lost Customers**.  
-
-| **Customer Segment**       | **RFM Score Groups**  | **Characteristics**  |
-|---------------------------|----------------------|----------------------|
-| Champions                | 555, 554, 544, etc.  | Frequent, high-value customers with recent purchases.  |
-| Loyal Customers          | 543, 444, 435, etc.  | Regular customers with good spending patterns.  |
-| Potential Loyalists      | 553, 552, 531, etc.  | Recent buyers with medium-to-high spending.  |
-| Recent Customers         | 512, 511, 311, etc.  | New customers with low purchase frequency.  |
-| Promising               | 525, 524, 523, etc.  | New customers with high spending potential.  |
-| Customers Needing Attention | 535, 534, 443, etc. | Previously frequent buyers, recently inactive.  |
-| At Risk                 | 255, 254, 245, etc.  | High-value customers who have stopped purchasing.  |
-| Can't Lose Them         | 155, 154, 144, etc.  | Previously high-value, now inactive customers.  |
-| Lost                    | 111, 112, 121, etc.  | Customers who made very few purchases a long time ago.  |
-
-
-#### **Dim_Date (Created using DAX)**  
-This dimension table enables time-based analysis, helping to track sales trends over different periods.  
-
-| **Column Name**   | **Data Type**  | **Description**  |
-|-------------------|--------------|------------------|
-| `Date`           | date          | Full date value.  |
-| `Year`           | int          | Year extracted from the date.  |
-| `Month`         | nvarchar(20)  | Full month name.  |
-| `Month Number`   | int          | Numeric month (1-12).  |
-| `Year-Month`     | nvarchar(7)  | Concatenated Year-Month (YYYY-MM).  |
-| `Quarter`        | nvarchar(2)  | Quarter (Q1-Q4).  |
-| `Day`           | int          | Day of the month.  |
-| `Weekday`       | nvarchar(20)  | Full name of the weekday.  |
-| `Weekday Number` | int          | Numeric weekday (1=Monday, 7=Sunday).  |
-| `Is Weekend`    | bit          | Identifies weekends (TRUE/FALSE).  |
-| `Week Number`   | int          | Week number of the year.  |
-| `Day of Year`   | int          | Day of the year (1-365).  |
-
-## 📊 Measure Table – Key Performance Indicators  
-
-To support **customer segmentation and retention analysis**, I created a **Measure Table** in Power BI that calculates essential metrics based on the dataset.  
-
-| **Measure Name** | **Calculation Logic** | **Purpose** |
-|------------------|----------------------|-------------|
-| **Total Revenue** | `SUM(Sales[Revenue])` | Calculates the total revenue from all transactions. |
-| **Average Order Value (AOV)** | `DIVIDE([Total Revenue], [Total Order Count])` | Determines the average revenue per order. |
-| **Customer Lifetime Value (CLV)** | `SUMX(VALUES(Customer[CustomerID]), [Average Order Value] * [Average Frequency])` | Estimates the total value a customer brings over time. |
-| **Recency (Days)** | `DATEDIFF(MAX(Sales[TransactionDate]), TODAY(), DAY)` | Measures how recently a customer made a purchase. |
-| **Frequency** | `COUNT(Sales[OrderID])` | Counts the number of transactions per customer. |
-| **Monetary Value** | `SUM(Sales[Revenue])` | Sums the total revenue per customer. |
-| **Churn Rate** | `DIVIDE([Churned Customers], [Total Customers])` | Calculates the percentage of customers who stopped purchasing. |
-| **Customer Retention Rate** | `1 - [Churn Rate]` | Determines the percentage of returning customers. |
-| **RFM Score** | `RANKX(ALL(Customer), [Recency] + [Frequency] + [Monetary], , DESC, Dense)` | Scores customers based on their **Recency, Frequency, and Monetary Value**. |
-| **High-Value Customers** | `IF([RFM Score] >= THRESHOLD, "High-Value", "Others")` | Categorizes customers based on their RFM score. | 
-
-
-### **Data Relationships & Schema Design**  
+To effectively analyze sales performance and customer behavior, the dataset was structured into a **star schema**, with **Sales.SalesOrderDetail** serving as the **Fact_Sales** table. This central fact table connects to multiple **dimension tables** to enhance data granularity and improve analytical capabilities. 
 
 The **Fact_Sales** table is at the center of the star schema, connecting to multiple dimension tables via **foreign key relationships**
 
@@ -182,51 +59,22 @@ The **Fact_Sales** table is at the center of the star schema, connecting to mult
 ### 1️⃣ Empathize – Understanding Stakeholders’ Needs  
 
 To ensure the dashboard meets business needs, I analyzed stakeholder concerns using the **5W1H framework** and an **Empathy Map**.  
+##### 🔍 5W1H Analysis 
+![Image](https://github.com/user-attachments/assets/ee0c09c3-0873-4c8c-b921-8d42706e8161)
 
-#### 🎯 Key Stakeholders  
-- **Marketing Professionals & Strategists** – Use the dashboard to refine **campaign strategies** and **improve customer engagement**.  
-- **Business & Data Analysts** – Leverage insights to identify **customer trends**, **optimize segmentation**, and support **data-driven decisions**.  
-- **E-commerce & Retail Decision-Makers** – Utilize the dashboard to **enhance customer retention**, **allocate budgets efficiently**, and **boost sales performance**.  
 
-#### ⚠️ Challenges Faced  
-- Lack of **structured customer insights**, leading to **ineffective targeting** and **wasted marketing spend**.  
-- Difficulty in **prioritizing customers**, making it hard to **personalize campaigns**.  
-- No **churn prevention strategy**, resulting in **lost revenue**.  
+##### 📝 Empathy Map – Understanding Stakeholder Perspectives  
+![Image](https://github.com/user-attachments/assets/b43c085e-1134-4f8e-8f4a-4a9bcabf7607)
 
-#### 🔍 5W1H Analysis  
-
-| **Question** | **Insight** |
-|-------------|------------|
-| **Who will use the dashboard?** | **Marketing professionals, business analysts, and e-commerce decision-makers** for **customer segmentation** and **campaign planning**. |
-| **What problem does it solve?** | Provides **structured segmentation** to identify **high-value and at-risk customers**. |
-| **When & Where is it used?** | - **Monthly meetings** for retention analysis. <br> - **Marketing campaign planning** to refine audience targeting. <br> - **Sales forecasting** to allocate budgets effectively. |
-| **Why is it needed?** | - **Improves marketing precision**. <br> - **Optimizes customer retention efforts**. <br> - **Supports data-driven sales strategies**. |
-| **How was the problem handled before?** | - **Relying on intuition** and **manual tracking**. <br> - **Running generic campaigns** with low engagement. |
-
-#### 📝 Empathy Map – Understanding Stakeholder Perspectives  
-
-| **Aspect** | **Insights from Stakeholders** |
-|-----------|--------------------------------|
-| **Thinking & Feeling** | "How do we identify our **most valuable customers**?" <br> "How can we **prevent churn**?" |
-| **Seeing** | **Unclear customer segmentation**, **broad marketing efforts**, **low conversion rates**. |
-| **Saying & Doing** | "We need **data-driven targeting strategies**." <br> "We should **focus on retaining high-value customers**." |
-| **Pain Points** | - **Marketing budget wasted** on low-value customers. <br> - No clear strategy to **reduce churn**. |
-| **Gains** | - **Higher CLV** through better segmentation. <br> - **Improved marketing ROI** with precise targeting. <br> - **Reduced churn & increased loyalty**. |
 
 ### 2️⃣ Define – Establishing Key Metrics & Growth Formula  
 
 #### 🎯 North Star Metric: Defining Success  
 To create a meaningful customer segmentation strategy, I define key success metrics that drive growth. My **North Star Metric (NSM)** is based on **RFM (Recency, Frequency, Monetary) scoring**, providing a structured way to classify customers and track business performance.
+![Image](https://github.com/user-attachments/assets/1f47d771-a844-4358-8c9c-4e3060c6a0ca)
 
-
-#### 📌 Growth Formula  
-I define **customer segments** and evaluate their impact across **three dimensions**:
-
-| **North Star Metric 1**  | **North Star Metric 2 (Optional)**  | **Dimension Group**  | **Group 1** | **Group 2** | **Group 3** | **Group 4** |
-|--------------------------|-------------------------------------|----------------------|-------------|-------------|-------------|-------------|
-| **RFM Score**  | Revenue Contribution by Segment | **Customer Segments** | Top Value | Need Retention | Need Conversion | No Action |
-| **RFM Score**  | Regional Customer Trends | **Geographic Region** | Customer behavior patterns by region | | | |
-| **RFM Score**  | Product Category Performance | **Product Segments** | Revenue share per product group | | | |
+#### 📌 Define Point Of View  
+![Image](https://github.com/user-attachments/assets/bc4497a6-19e8-4c1e-9db6-624a26ca71ca)
 
 
 #### 📊 When is Success Achieved?  
@@ -486,8 +334,8 @@ I categorize customers into four main groups to optimize engagement and revenue:
 ✅ Boost sales of high-growth products like helmets & touring bikes.  
 ✅ Investigate why repeat purchases remain low despite high active customer rates.  
 
-## 📢 Customer Retention Analysis  
-![Image](https://github.com/user-attachments/assets/aa41c632-3c6f-4653-b5e3-a19422435f97)
+## 📢 Customer Conversion Analysis  
+![Image](https://github.com/user-attachments/assets/424119f7-eb23-468f-9326-7387db72c27b)
 ### Overview  
 - Total revenue: $20.06M  
 - Total customers: 19.12K  
