@@ -151,7 +151,7 @@ I categorize customers into four main groups to optimize engagement and revenue:
 
 
 ## 📊 Segmentation
-![Image](https://github.com/user-attachments/assets/82b89754-1ac8-4fe0-82db-aa739e562072)
+![Image](https://github.com/user-attachments/assets/c2d08f84-5ee3-4af2-84c4-f5a164dd6de8)
 
 ### 1️⃣ Key Metrics  
 - Average recency: 190 days  
